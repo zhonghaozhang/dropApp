@@ -1,0 +1,128 @@
+{
+  "id": "1498745",
+  "name": "11",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5324390",
+      "name": "手电筒",
+      "font_class": "shoudiantong",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "11782646",
+      "name": "修正_对号",
+      "font_class": "xiuzheng_duihao",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "11782647",
+      "name": "登录_用户",
+      "font_class": "denglu_yonghu",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "11782648",
+      "name": "修正_编辑",
+      "font_class": "xiuzheng_bianji",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "11782649",
+      "name": "妥投_导航",
+      "font_class": "tuotou_daohang",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "11782650",
+      "name": "管理_退出",
+      "font_class": "guanli_tuichu",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "11782651",
+      "name": "管理_异常处理",
+      "font_class": "guanli_yichangchuli",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "11782652",
+      "name": "登录_密码",
+      "font_class": "denglu_mima",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "11782653",
+      "name": "管理_投递量统计",
+      "font_class": "guanli_toudiliangtongji",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "11782654",
+      "name": "管理_修改密码",
+      "font_class": "guanli_xiugaimima",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "11782655",
+      "name": "妥投_电话",
+      "font_class": "tuotou_dianhua",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "11782656",
+      "name": "管理_揽收量统计",
+      "font_class": "guanli_lanshouliangtongji",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "11782657",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "11782658",
+      "name": "管理",
+      "font_class": "guanli",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "11782659",
+      "name": "首页_快递",
+      "font_class": "shouye_kuaidi",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "11782661",
+      "name": "揽收",
+      "font_class": "lanshou",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "11790905",
+      "name": "投递",
+      "font_class": "toudi",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    }
+  ]
+}
