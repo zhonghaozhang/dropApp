@@ -1,6 +1,6 @@
 # drop-app
 
-> vue cordova
+> vue cordova 需要配合cordova 才能运行
 
 ## Build Setup
 
