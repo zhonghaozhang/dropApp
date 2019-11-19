@@ -60,7 +60,6 @@
           console.log(err)
           this.$toast(err.message)
         })
-
       }
     },
     mounted(){
