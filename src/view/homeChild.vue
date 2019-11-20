@@ -105,7 +105,6 @@
                 that.map.setCenter(data.points[0]);
               }
             }
-
             setTimeout(function(){
               var convertor = new BMap.Convertor();
               var pointArr = [];
@@ -177,7 +176,7 @@
     top: 53px;
     left: 16px;
     background: #fff;
-    box-shadow: 0 2px 4px 0;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
     border-radius: 6px;
     .row{
       height: 23px;

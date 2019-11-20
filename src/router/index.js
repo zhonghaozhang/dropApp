@@ -49,22 +49,22 @@ const router = new Router({
           component:r => require.ensure([], () => r(require('../view/toudi.vue')), 'toudi')
         },
         {
-          name:'test3',
-          path:'/test3',
+          name:'lanshou',
+          path:'/lanshou',
           meta:{
             requireAuth:true,
             menuIndex:2
           },
-          component:r => require.ensure([], () => r(require('../view/test3.vue')), 'test3')
+          component:r => require.ensure([], () => r(require('../view/lanshou.vue')), 'lanshou')
         },
         {
-          name:'test4',
-          path:'/test4',
+          name:'admin',
+          path:'/admin',
           meta:{
             requireAuth:true,
             menuIndex:3
           },
-          component:r => require.ensure([], () => r(require('../view/test4.vue')), 'test4')
+          component:r => require.ensure([], () => r(require('../view/admin.vue')), 'admin')
         }
       ]
     },

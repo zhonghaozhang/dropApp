@@ -19,7 +19,6 @@
     <div class="mini-title">待投递 4件</div>
     <div class="content">
       <div class="list">
-
         <div v-for="item in 10">
           <div class="row">
             <div class="left wrap" @click="openDetails">
@@ -80,7 +79,18 @@
           ]
         }
       },
+     mounted(){
+       this.getData()
+     },
       methods:{
+        getData(){
+          this.$get('delivered/getDeliveredData',{
+            id:this.$store.state.user.id,
+            deptCode:this.$store.state.user.deptCode,
+          }).then((res)=>{
+            console.log(res)
+          })
+        },
         openScan(flag){
           if(flag == 1){
             this.$router.push('scanPage')
@@ -139,7 +149,7 @@
     top: 53px;
     left: 16px;
     background: #fff;
-    box-shadow: 0 2px 4px 0;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
     border-radius: 6px;
     .row{
       height: 23px;
@@ -166,7 +176,7 @@
     height: 449px;
     margin-left: 17px;
     background: #FFFFFF;
-    box-shadow: 0 2px 4px 0;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
     border-radius: 6px;
     margin-top: 8px;
     text-align: center;

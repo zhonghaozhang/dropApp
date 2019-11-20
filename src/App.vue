@@ -25,9 +25,9 @@ export default {
         this.$store.commit('updateMenu',0)
       }else if(to.name == 'toudi'){
         this.$store.commit('updateMenu',1)
-      }else if(to.name == 'test3'){
+      }else if(to.name == 'lanshou'){
         this.$store.commit('updateMenu',2)
-      }else if(to.name == 'test4'){
+      }else if(to.name == 'admin'){
         this.$store.commit('updateMenu',3)
       }
 

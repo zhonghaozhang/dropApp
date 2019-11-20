@@ -123,6 +123,13 @@
       "font_class": "toudi",
       "unicode": "e618",
       "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "11870794",
+      "name": "修改密码",
+      "font_class": "xiugaimima",
+      "unicode": "e616",
+      "unicode_decimal": 58902
     }
   ]
 }

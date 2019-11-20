@@ -35,9 +35,9 @@
           }else if(val== 1){
             this.$router.push('toudi')
           }else if(val== 2){
-            this.$router.push('test3')
+            this.$router.push('lanshou')
           }else if(val== 3){
-            this.$router.push('test4')
+            this.$router.push('admin')
           }
 
           // function getInfo(){
