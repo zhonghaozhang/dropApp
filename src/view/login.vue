@@ -51,9 +51,11 @@
           }else {
             this.$post('login',{account:this.username,password: this.password}).then((res)=>{
               if(res.status == 0){
-                this.$toast.success(res.message);
                 this.$router.replace('home')
+                this.$toast.success(res.message);
                 this.$store.commit(types.LOGIN,res.loginUser)
+                this.username = ''
+                this.password = ''
               }else{
                 this.$toast.fail(res.message);
                 this.username = ''

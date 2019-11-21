@@ -11,23 +11,23 @@
         <van-col class="title" span="8">待投</van-col>
       </van-row>
       <van-row class="row">
-        <van-col class="text" span="8">19</van-col>
-        <van-col class="text" span="8">15</van-col>
-        <van-col class="text" span="8">4</van-col>
+        <van-col class="text" span="8">{{SumNum}}</van-col>
+        <van-col class="text" span="8">{{YTNum}}</van-col>
+        <van-col class="text" span="8">{{WTNum}}</van-col>
       </van-row>
     </div>
-    <div class="mini-title">待投递 4件</div>
+    <div class="mini-title">待投递 {{total}}件</div>
     <div class="content">
       <div class="list">
-        <div v-for="item in 10">
+        <div v-for="item in nodeList">
           <div class="row">
-            <div class="left wrap" @click="openDetails">
-              <div class="top-text">北京市海淀区建材城西路65号</div>
-              <div class="bottom-text">张三 13200000000</div>
+            <div class="left wrap" @click="openDetails(item)">
+              <div class="top-text">{{item.nodeAddress}}</div>
+              <div class="bottom-text">共 {{item.mailSize}}件</div>
             </div>
             <div class="middle-line"></div>
             <div class="right wrap">
-              <i class="iconfont icon-tuotou_dianhua left-icon"></i>
+              <i class="iconfont icon-tuotou_dianhua left-icon" @click="openPhone(item.id)"></i>
               <i class="iconfont icon-tuotou_daohang right-icon"></i>
             </div>
           </div>
@@ -40,15 +40,17 @@
       <van-button @click="openScan(2)" class="button right-button" type="default">未妥投扫描</van-button>
     </div>
     <van-action-sheet v-model="isShow" title="详细信息">
-      <div v-for="item in 10">
+      <div v-for="item in mailList">
         <div class="row">
           <div class="left wrap">
-            <div class="top-text">北京市海淀区建材城西路65号11111111111111111111111111</div>
-            <div class="bottom-text">张三 13200000000</div>
+            <div class="top-text">{{item.recAddress}}</div>
+            <div class="bottom-text">{{item.receiver}} {{item.recPhone}}</div>
           </div>
           <div class="middle-line"></div>
           <div class="right wrap">
-            <i class="iconfont icon-tuotou_dianhua left-icon"></i>
+            <a :href="`tel:${item.recPhone}`">
+              <i class="iconfont icon-tuotou_dianhua left-icon"></i>
+            </a>
             <i class="iconfont icon-tuotou_daohang right-icon"></i>
           </div>
         </div>
@@ -70,6 +72,12 @@
       name: "toudi",
       data(){
         return {
+          total:0,
+          nodeList:[],
+          mailList:[],
+          SumNum:0,
+          YTNum:0,
+          WTNum:0,
           isShow:false,
           showSelect:false,
           actions: [
@@ -89,6 +97,27 @@
             deptCode:this.$store.state.user.deptCode,
           }).then((res)=>{
             console.log(res)
+            this.$toast(res.message)
+            this.total = res.mailSum
+            this.nodeList = res.nodeList
+          })
+          this.$get('/delivered/getEamilNum',{
+            id:this.$store.state.user.id,
+            deptCode:this.$store.state.user.deptCode,
+          }).then((res)=>{
+            console.log(res)
+            this.$toast(res.message)
+            this.SumNum = res.SumNum
+            this.WTNum = res.WTNum
+            this.YTNum = res.YTNum
+          })
+        },
+        openPhone(id){
+          this.$get('delivered/call',{
+            nodeId:id
+          }).then((res)=>{
+            console.log(res)
+            this.$toast(res.message)
           })
         },
         openScan(flag){
@@ -103,7 +132,13 @@
               } else {
                 // The scan completed, display the contents of the QR code:
                 this.plugins.openVibrate(500)
-                this.$toast(text);
+                // this.$toast(text);
+                this.$get('delivered/thisVote',{
+                  mailNumber:text,
+                }).then((res)=>{
+                  console.log(res)
+                  this.$toast(res.message)
+                })
                 this.$router.goBack()
               }
             })
@@ -111,8 +146,9 @@
             this.showSelect = true
           }
         },
-        onSelect(val){
-          console.log(val)
+        onSelect(item,index){
+          console.log(item)
+          console.log(index)
           this.showSelect = false
           this.$router.push('scanPage')
           this.plugins.openScan((err, text)=>{
@@ -124,7 +160,22 @@
             } else {
               // The scan completed, display the contents of the QR code:
               this.plugins.openVibrate(500)
-              this.$toast(text);
+              // this.$toast(text);
+              let selectName = ''
+              if(item.name == '退回'){
+                selectName = 3
+              }else if(item.name == '再投'){
+                selectName = 2
+              }else if(item.name == '转投'){
+                selectName = 4
+              }
+              this.$get('delivered/noThisVote',{
+                mailNumber:text,
+                deliveryStatus:selectName,
+              }).then((res)=>{
+                console.log(res)
+                this.$toast(res.message)
+              })
               this.$router.goBack()
             }
           })
@@ -132,8 +183,9 @@
         onCancel(){
           this.showSelect = false
         },
-        openDetails(){
+        openDetails(item){
           this.isShow = true
+          this.mailList = item.mailList
         }
       }
    }
@@ -185,16 +237,13 @@
       overflow-y: auto;
     }
     .row{
-      height: 60px;
+      min-height: 60px;
       text-align: left;
       font-size: 0;
       .wrap{
         display: inline-block;
         font-size: 0;
         text-align: left;
-        overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
       }
       .middle-line{
         display: inline-block;
@@ -210,11 +259,7 @@
         width: 246px;
         padding-left: 11px;
         .top-text{
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
           width: 100%;
-          height: 50%;
           font-size: 13px;
           color: #000;
           margin-top: 12px;
@@ -223,12 +268,13 @@
           font-size: 11px;
           color: #A7A7A7;
           width: 100%;
-          height: 50%;
+          margin-top: 2px;
         }
       }
       .right{
         width: 94px;
         height: 60px;
+        vertical-align: top;
         .iconfont{
           width: 16px;
           height: 16px;
@@ -276,16 +322,13 @@
     overflow-y: auto;
     .row{
       padding-left: 15px;
-      height: 60px;
+      min-height: 60px;
       text-align: left;
       font-size: 0;
       .wrap{
         display: inline-block;
         font-size: 0;
         text-align: left;
-        overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
       }
       .middle-line{
         display: inline-block;
@@ -301,11 +344,7 @@
         width: 246px;
         padding-left: 11px;
         .top-text{
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
           width: 100%;
-          height: 50%;
           font-size: 13px;
           color: #000;
           margin-top: 12px;
@@ -314,12 +353,13 @@
           font-size: 11px;
           color: #A7A7A7;
           width: 100%;
-          height: 50%;
+          margin-top: 2px;
         }
       }
       .right{
         width: 94px;
         height: 60px;
+        vertical-align: top;
         .iconfont{
           width: 16px;
           height: 16px;

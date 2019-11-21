@@ -28,7 +28,7 @@
           <van-cell title="修改密码" size="large" is-link>
             <van-icon slot="icon" class="iconfont" class-prefix="icon" name="xiugaimima"></van-icon>
           </van-cell>
-          <van-cell title="退出" size="large" is-link>
+          <van-cell title="退出" size="large" @click="logout" is-link>
             <van-icon slot="icon" class="iconfont" class-prefix="icon" name="guanli_tuichu"></van-icon>
           </van-cell>
         </van-cell-group>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import * as types from '../store/types'
     export default {
         name: "admin",
         data(){
@@ -50,7 +51,17 @@
           }
         },
         methods:{
+          logout(){
+            this.$dialog.confirm({
+              title: '退出登录',
+              message: '是否确认退出登录?'
+            }).then(() => {
+              this.$router.replace('/')
+              this.$store.commit(types.LOGOUT)
+            }).catch(() => {
 
+            });
+          }
         }
     }
 </script>
