@@ -106,7 +106,6 @@
             deptCode:this.$store.state.user.deptCode,
           }).then((res)=>{
             console.log(res)
-            this.$toast(res.message)
             this.SumNum = res.SumNum
             this.WTNum = res.WTNum
             this.YTNum = res.YTNum

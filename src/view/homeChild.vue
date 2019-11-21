@@ -46,19 +46,54 @@
           this.map = new BMap.Map('map') // 创建地图实例
           var point = new BMap.Point(116.391641, 40.068351) // 创建点坐标
           this.map.centerAndZoom(point, 15) // 初始化地图，设置中心点坐标和地图级别
-          this.plugins.getPosition((position)=> {
-            console.log(position)
-            var pt = new BMap.Point(position.coords.longitude, position.coords.latitude);
-            var convertor = new BMap.Convertor()
 
-            function callback(data) {
+          let geolocation = new BMap.Geolocation()
+          geolocation.enableSDKLocation() // 允许SDK辅助
+          geolocation.getCurrentPosition( (res) =>{
+            if (geolocation.getStatus() === 0) {
+             console.log(res)
+              var point = new BMap.Point(res.longitude,res.latitude)
               var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
-              var marker = new BMap.Marker(data.points[0], {icon: myIcon});  // 创建标注
-              that.map.addOverlay(marker)
-              that.map.setCenter(data.points[0])
+              var marker = new BMap.Marker(point, {icon: myIcon});  // 创建标注
+              this.map.addOverlay(marker)
+              this.map.setCenter(point)
+            }else if(geolocation.getStatus() === 2){
+              this.$toast('位置未知,请稍后再试!')
+            }else if(geolocation.getStatus() === 8){
+              this.$toast('定位超时,请稍后再试!')
+            }else if(geolocation.getStatus() === 6){
+              this.$toast('没有定位权限!')
             }
-            convertor.translate([pt], 1, 5, callback)
+          },{
+            enableHighAccuracy:true,
+            SDKLocation:true,
+            maximumAge:0,
+            timeout:60000,
           })
+
+          // baidumap_location.getCurrentPosition (function (result) {
+          //     console.log(result)
+          //   alert(1)
+          //    }, function (error) {
+          //      console.log(error)
+          //   alert(2)
+          //    })
+          //
+          // this.plugins.getPosition((position)=> {
+          //   console.log('----')
+          //   console.log(position)
+          //   alert(JSON.stringify(position))
+          //   var pt = new BMap.Point(position.coords.longitude, position.coords.latitude);
+          //   var convertor = new BMap.Convertor()
+          //
+          //   function callback(data) {
+          //     var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
+          //     var marker = new BMap.Marker(data.points[0], {icon: myIcon});  // 创建标注
+          //     that.map.addOverlay(marker)
+          //     that.map.setCenter(data.points[0])
+          //   }
+          //   convertor.translate([pt], 1, 5, callback)
+          // },err=>{console.log(err)})
 
          //  var options={
          //    enableHighAccuracy:true,//开启高精度
