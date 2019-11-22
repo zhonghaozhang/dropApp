@@ -1,13 +1,13 @@
 <template>
   <div>
     <router-view class="child-view"></router-view>
-    <van-tabbar v-model="active" @change="menuChange">
+    <van-tabbar v-model="updateMenu" @change="menuChange">
       <van-tabbar-item>
         <i slot="icon" slot-scope="props" class="iconfont icon-shouye"></i>
         首页</van-tabbar-item>
       <van-tabbar-item >
         <i slot="icon" slot-scope="props" class="iconfont icon-toudi"></i>
-        妥投</van-tabbar-item>
+        投递</van-tabbar-item>
       <van-tabbar-item >
         <i slot="icon" slot-scope="props" class="iconfont icon-lanshou"></i>
         揽收</van-tabbar-item>
@@ -24,7 +24,7 @@
       name: "home",
       data(){
         return {
-          active: 0
+          // active: 0
         }
       },
       methods:{
@@ -70,13 +70,12 @@
         }
       },
       //监听执行
-      watch: {
-        updateMenu(newval, oldval){
-          // 需要执行的代码
-          this.active = newval
-        }
-
-      }
+      // watch: {
+      //   updateMenu(newval, oldval){
+      //     alert(newval)
+      //     // this.active = newval
+      //   }
+      // }
     }
 </script>
 

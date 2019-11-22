@@ -1,9 +1,7 @@
 <template>
   <div id="app">
       <transition :name="transition">
-        <keep-alive>
           <router-view class="view"></router-view>
-        </keep-alive>
       </transition>
   </div>
 </template>
@@ -44,7 +42,9 @@ export default {
 
 }
 </script>
-
+<style>
+  @import "style/common.scss";
+</style>
 <style>
   html,body{
     padding: 0;

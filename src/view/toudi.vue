@@ -1,7 +1,7 @@
 <template>
   <div class="toudi">
     <van-nav-bar
-      title="妥投"
+      title="投递"
       border
     ></van-nav-bar>
     <div class="model">

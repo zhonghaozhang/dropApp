@@ -8,8 +8,8 @@
     <div class="model">
       <van-row class="row">
         <van-col class="title" span="8">总件量</van-col>
-        <van-col class="title" span="8">已投</van-col>
-        <van-col class="title" span="8">待投</van-col>
+        <van-col class="title" span="8">已揽</van-col>
+        <van-col class="title" span="8">待揽</van-col>
       </van-row>
       <van-row class="row">
         <van-col class="text" span="8">{{SumNum}}</van-col>
@@ -65,14 +65,13 @@
     },
     methods:{
       getData(){
-        this.$get('/delivered/getEamilNum',{
-          id:this.$store.state.user.id,
-          deptCode:this.$store.state.user.deptCode,
+        this.$get('collection/getCollectionNum',{
+          userId:this.$store.state.user.id,
         }).then((res)=>{
           console.log(res)
-          this.SumNum = res.SumNum
-          this.WTNum = res.WTNum
-          this.YTNum = res.YTNum
+          this.SumNum = res.ZL
+          this.WTNum = res.WL
+          this.YTNum = res.YL
         })
         this.$get('collection/getCollection',{
           userId:this.$store.state.user.id,
@@ -166,7 +165,7 @@
     }
   }
   #map{
-    height: 331px;
+    height: 300px;
     width: 100%;
   }
   .content{

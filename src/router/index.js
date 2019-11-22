@@ -4,7 +4,6 @@ import Router from 'vue-router'
 import plugins from '../cordovaPlugin/index'
 
 Router.prototype.goBack = function () {
-  console.log(document.getElementById('body'))
   this.isBack = true
   plugins.closeScan()
   window.history.go(-1)
@@ -69,12 +68,20 @@ const router = new Router({
       ]
     },
     {
-      path: '/test5',
-      name: 'test5',
+      path: '/toudiCount',
+      name: 'toudiCount',
       meta:{
         requireAuth:true,
       },
-      component: r => require.ensure([], () => r(require('../view/test5.vue')), 'test5')
+      component: r => require.ensure([], () => r(require('../view/toudiCount.vue')), 'toudiCount')
+    },
+    {
+      path: '/updatePassword',
+      name: 'updatePassword',
+      meta:{
+        requireAuth:true,
+      },
+      component: r => require.ensure([], () => r(require('../view/updatePassword.vue')), 'updatePassword')
     },
     {
       path: '/scanPage',
