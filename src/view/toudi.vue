@@ -28,7 +28,7 @@
             <div class="middle-line"></div>
             <div class="right wrap">
               <i class="iconfont icon-tuotou_dianhua left-icon" @click="openPhone(item.id)"></i>
-              <i class="iconfont icon-tuotou_daohang right-icon"></i>
+              <i class="iconfont icon-tuotou_daohang right-icon" @click="openApp(item,0)"></i>
             </div>
           </div>
           <div class="bottom-line"></div>
@@ -51,7 +51,7 @@
             <a :href="`tel:${item.recPhone}`">
               <i class="iconfont icon-tuotou_dianhua left-icon"></i>
             </a>
-            <i class="iconfont icon-tuotou_daohang right-icon"></i>
+            <i class="iconfont icon-tuotou_daohang right-icon" @click="openApp(item,1)"></i>
           </div>
         </div>
         <div class="bottom-line"></div>
@@ -119,6 +119,22 @@
             this.$toast(res.message)
           })
         },
+        openApp(item,flag){
+          this.plugins.getBaiduPosition().then((res)=>{
+            if(res == undefined || res == null ){
+              this.$toast('当前定位获取不到,无法导航,请手动打开app自行导航!')
+              return
+            }
+            var data ={
+              startlat:res.latitude,
+              startlng:res.longitude,
+              endlat:flag ==0 ? item.nodeLatitude : item.mailLatitude,
+              endlng:flag ==0 ? item.nodeLongitude : item.mailLongitude,
+              addr:flag ==0 ? item.nodeAddress : item.recAddress,
+            }
+            this.plugins.openBaiduMap(data)
+          })
+        },
         openScan(flag){
           if(flag == 1){
             this.$router.push('scanPage')
@@ -137,8 +153,8 @@
                 }).then((res)=>{
                   console.log(res)
                   this.$toast(res.message)
+                  this.$router.goBack()
                 })
-                this.$router.goBack()
               }
             })
           }else {

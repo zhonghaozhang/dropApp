@@ -1,3 +1,5 @@
+import {Toast,Dialog} from 'vant'
+
 /*
 * cordova plugin function 封装
 * 定位插件  cordova-plugin-geolocation https://www.npmjs.com/package/cordova-plugin-geolocation
@@ -41,17 +43,17 @@ export default {
       console.log(err)
       if(err){
         if (err.name === 'SCAN_CANCELED') {
-          this.$toast('已取消扫描');
+          Toast('已取消扫描');
         }else if(err.name === 'BACK_CAMERA_UNAVAILABLE'){
-          this.$toast('后置摄像头不可用,请检查设置!');
+          Toast('后置摄像头不可用,请检查设置!');
         }else if(err.name === 'CAMERA_ACCESS_DENIED'){
-          this.$toast('用户拒绝摄像机访问!');
+          Toast('用户拒绝摄像机访问!');
         }else if(err.name === 'CAMERA_ACCESS_DENIED'){
-          this.$toast('摄像机访问受到限制 (由于家长控制，组织安全配置配置文件或类似原因)!');
+          Toast('摄像机访问受到限制 (由于家长控制，组织安全配置配置文件或类似原因)!');
         }else if(err.name === 'CAMERA_ACCESS_DENIED'){
-          this.$toast('相机不可用，因为它不存在或无法配置!');
+          Toast('相机不可用，因为它不存在或无法配置!');
         }else {
-          this.$toast('出现错误,原因不详,请检查手机设置!');
+          Toast('出现错误,原因不详,请检查手机设置!');
         }
       }
       if (status.authorized) {
@@ -60,7 +62,7 @@ export default {
         QRScanner.scan(onSuccess);
         // QRscanner.show（）应该很快。
       } else if (status.denied) {
-        Vue.$dialog.confirm({
+        Dialog.confirm({
           title: '是否同意',
           message: '前往设置打开摄像访问权限?'
         }).then(() => {
@@ -98,7 +100,7 @@ export default {
    * */
   openVibrate(time){
     navigator.vibrate(time)
-  }
+  },
 
   /*
   * cordova-plugin-keyboard  键盘监听插件
@@ -106,4 +108,52 @@ export default {
   *  keyboardDidHide 完全关闭 触发
   * */
 
+  /*
+  * 打开百度地图app
+  * cordova plugin startapp 打开第三方软件
+  * https://github.com/lampaa/com.lampa.startapp.git
+  * */
+  openBaiduMap(data){
+    var sApp = startApp.set({  //跳转对应APP 
+      "action":"ACTION_VIEW",
+      "category":"CATEGORY_DEFAULT",
+      "type":"text/css",
+      "package":"com.baidu.BaiduMap",
+      "uri":`baidumap://map/direction?$origin=${data.startlat},${data.startlng}&destination=name:${data.addr}||latlng:${data.endlat},${data.endlng}&coord_type=bd09ll&mode=driving&src=andr.baidu.openAPIdemo`,
+      "flags":["FLAG_ACTIVITY_CLEAR_TOP","FLAG_ACTIVITY_CLEAR_TASK"],
+      "intentstart":"startActivity",
+    }, { /* extras */
+      "EXTRA_STREAM":"extraValue1",
+      "extraKey2":"extraValue2"
+    });
+    sApp.start(function() { //跳转成功  
+      Toast('打开成功')
+    }, function(error) { //失败 
+      Toast('打开百度地图失败,请核实是否安装百度地图app!')
+    });
+  },
+  getBaiduPosition(){
+    return new Promise((resolve,reject)=>{
+      let geolocation = new BMap.Geolocation()
+      geolocation.enableSDKLocation() // 允许SDK辅助
+      geolocation.getCurrentPosition( (res) =>{
+        if (geolocation.getStatus() === 0) {
+          console.log(res)
+          resolve(res)
+        }else if(geolocation.getStatus() === 2){
+          Toast('位置未知,请稍后再试!')
+        }else if(geolocation.getStatus() === 8){
+          Toast('定位超时,请稍后再试!')
+        }else if(geolocation.getStatus() === 6){
+          Toast('没有定位权限!')
+        }
+      },{
+        enableHighAccuracy:true,
+        SDKLocation:true,
+        maximumAge:0,
+        timeout:60000,
+      })
+    })
+
+  }
 }

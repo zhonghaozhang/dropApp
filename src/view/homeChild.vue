@@ -27,7 +27,7 @@
   import userMessenger from '../assets/img/userMessenger.png'
   import box from '../assets/img/box.png'
     export default {
-      name: "test",
+      name: "homeChild",
       data(){
         return {
           map:{},
@@ -46,30 +46,14 @@
           this.map = new BMap.Map('map') // 创建地图实例
           var point = new BMap.Point(116.391641, 40.068351) // 创建点坐标
           this.map.centerAndZoom(point, 15) // 初始化地图，设置中心点坐标和地图级别
-
-          let geolocation = new BMap.Geolocation()
-          geolocation.enableSDKLocation() // 允许SDK辅助
-          geolocation.getCurrentPosition( (res) =>{
-            if (geolocation.getStatus() === 0) {
-             console.log(res)
-              var point = new BMap.Point(res.longitude,res.latitude)
-              var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
-              var marker = new BMap.Marker(point, {icon: myIcon});  // 创建标注
-              this.map.addOverlay(marker)
-              this.map.setCenter(point)
-            }else if(geolocation.getStatus() === 2){
-              this.$toast('位置未知,请稍后再试!')
-            }else if(geolocation.getStatus() === 8){
-              this.$toast('定位超时,请稍后再试!')
-            }else if(geolocation.getStatus() === 6){
-              this.$toast('没有定位权限!')
-            }
-          },{
-            enableHighAccuracy:true,
-            SDKLocation:true,
-            maximumAge:0,
-            timeout:60000,
+          this.plugins.getBaiduPosition().then((res)=>{
+            var point = new BMap.Point(res.longitude,res.latitude)
+            var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
+            var marker = new BMap.Marker(point, {icon: myIcon});  // 创建标注
+            this.map.addOverlay(marker)
+            this.map.setCenter(point)
           })
+
 
           // baidumap_location.getCurrentPosition (function (result) {
           //     console.log(result)
@@ -173,8 +157,8 @@
               }).then((res)=>{
                 console.log(res)
                 this.$toast(res.message)
+                this.$router.goBack()
               })
-              this.$router.goBack()
             }
           })
         },

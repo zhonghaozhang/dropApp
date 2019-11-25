@@ -23,7 +23,9 @@
     export default {
       name: "scanPage",
       data(){
-        isLight:true
+        return {
+          isLight:true
+        }
       },
       methods:{
         onClickLeft(){
