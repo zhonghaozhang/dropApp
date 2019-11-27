@@ -8,14 +8,14 @@ import router from './router'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import 'lib-flexible'
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole' // 调试神器
 import './assets/font_icon/iconfont.css'
 import Http from './http/index'
 import plugins from './cordovaPlugin/index'
 import Debounce from './utils/index'
 
 Vue.component('Debounce',Debounce)
-var vcanonso = new Vconsole()
+// var vconsole = new Vconsole()
 Vue.use(Vant);
 Vue.prototype.$get = Http.get
 Vue.prototype.$post = Http.post

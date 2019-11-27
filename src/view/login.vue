@@ -45,7 +45,6 @@
       },
       methods:{
         login(){
-          console.log('test')
           if(this.username == '' && this.password == ''){
             this.$toast('用户名或密码不能为空!')
           }else {
@@ -65,9 +64,6 @@
           }
 
         }
-      },
-      mounted() {
-
       }
     }
 </script>
