@@ -20,6 +20,11 @@ const router = new Router({
       component: r => require.ensure([], () => r(require('../view/login.vue')), 'login'),
     },
     {
+      path: '/testTracking',
+      name: 'testTracking',
+      component: r => require.ensure([], () => r(require('../view/testTracking.vue')), 'testTracking'),
+    },
+    {
       path: '/home',
       name: 'home',
       redirect:'homeChild',

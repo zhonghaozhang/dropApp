@@ -25,6 +25,7 @@
         <Debounce :time='500' isDebounce>
           <van-button @click="login" class="login-button" type="info" size="large">登录</van-button>
         </Debounce>
+<!--        <van-button @click="goToPage" class="login-button" type="info" size="large">人脸识别</van-button>-->
       </div>
     </div>
 </template>
@@ -37,13 +38,15 @@
         return {
           username:'',
           password:'',
-
         }
       },
       mounted(){
 
       },
       methods:{
+        goToPage(){
+          this.$router.push('testTracking')
+        },
         login(){
           if(this.username == '' && this.password == ''){
             this.$toast('用户名或密码不能为空!')

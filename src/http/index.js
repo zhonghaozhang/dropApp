@@ -35,20 +35,15 @@ axios.interceptors.response.use( (response) => {
     console.log(error.response)
     switch (error.response.status) {
       case 401:
-        // 401 清除token信息并跳转到登录页面
-        store.commit(types.LOGOUT)
-        // 只有在当前路由不是登录页面才跳转
-        console.log(router.currentRoute.path)
-        router.currentRoute.path !== 'login' &&
-        router.replace({
-          path: '/',
-          query: { redirect: router.currentRoute.path },
-        })
-        // Message({
-        //   duration:5000,
-        //   type:'error',
-        //   message:'登录超时，请重新登录！'
-        // });
+        // // 401 清除token信息并跳转到登录页面
+        // store.commit(types.LOGOUT)
+        // // 只有在当前路由不是登录页面才跳转
+        // console.log(router.currentRoute.path)
+        // router.currentRoute.path !== 'login' &&
+        // router.replace({
+        //   path: '/',
+        //   query: { redirect: router.currentRoute.path },
+        // })
         break;
     }
   }
@@ -82,7 +77,6 @@ axios.interceptors.response.use( (response) => {
       }).catch(err=>{
         console.log(err,'异常')
       })
-
     })
   }
 }
