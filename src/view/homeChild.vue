@@ -232,7 +232,7 @@
       height: 30px;
       line-height: 30px;
       background: #0091FF;
-      border-radius: 6px;
+      border-radius: 15px;
       color: #fff;
       font-size: 13px;
       text-align: center;

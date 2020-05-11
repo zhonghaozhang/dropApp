@@ -8,14 +8,14 @@ import router from './router'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import 'lib-flexible'
-// import Vconsole from 'vconsole' // 调试神器
+import Vconsole from 'vconsole' // 调试神器
 import './assets/font_icon/iconfont.css'
 import Http from './http/index'
 import plugins from './cordovaPlugin/index'
 import Debounce from './utils/index'
 
 Vue.component('Debounce',Debounce)
-// var vconsole = new Vconsole()
+var vconsole = new Vconsole()
 Vue.use(Vant);
 Vue.prototype.$get = Http.get
 Vue.prototype.$post = Http.post
@@ -32,6 +32,7 @@ Vue.config.productionTip = false
 Vue.use(Vuex)
 
 document.addEventListener("deviceready", () => {
+
   // alert('准备完成,开始初始化vue')
   new Vue({
     el: '#app',
@@ -40,7 +41,36 @@ document.addEventListener("deviceready", () => {
     components: { App },
     template: '<App/>'
   })
+  // 初始化极光推送
+  document.addEventListener('jpush.receiveRegistrationId', function (event) {
+    console.log('初始化' + event)
+  }, false)
+    initiateUI()
 }, false);
+function initiateUI(){
+  try {
+    window.JPush.init()
+    window.JPush.setDebugMode(true)
+    getRegistrationID()
+  } catch (e) {
+    // alert('init' + e)
+  }
+}
+function getRegistrationID(){
+  window.JPush.getRegistrationID((data)=>{
+    console.log('get' + data)
+  })
+
+}
+document.addEventListener("jpush.openNotification", function (event) { //点击推送消息触发
+  var alertContent
+  if(device.platform == "Android") {
+    alertContent = event.alert
+    alert(alertContent)
+  } else {
+    alertContent = event.aps.alert
+  }
+}, false)
 
 
 

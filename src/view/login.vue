@@ -4,6 +4,7 @@
       <div class="inputs">
         <van-cell-group>
           <van-field
+            @focus="isFocus"
             v-model="username"
             clearable
             label="用户名"
@@ -11,6 +12,7 @@
             <i slot="left-icon" class="icon iconfont icon-denglu_yonghu"></i>
           </van-field>
           <van-field
+            @focus="isFocus"
             clearable
             v-model="password"
             type="password"
@@ -21,7 +23,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div class="bottom">
+      <div class="bottom" ref="bottom">
         <Debounce :time='500' isDebounce>
           <van-button @click="login" class="login-button" type="info" size="large">登录</van-button>
         </Debounce>
@@ -50,8 +52,10 @@
         login(){
           if(this.username == '' && this.password == ''){
             this.$toast('用户名或密码不能为空!')
+            this.$store.commit(types.LOGIN,{name:'测试'})
+            this.$router.replace('home')
           }else {
-            this.$post('login',{account:this.username,password: this.password}).then((res)=>{
+            this.$post('login_app',{account:this.username,password: this.password}).then((res)=>{
               if(res.status == 0){
                 this.$store.commit(types.LOGIN,res.loginUser)
                 this.$router.replace('home')
@@ -66,6 +70,12 @@
             })
           }
 
+        },
+        isFocus(e){
+          console.log(e)
+          setTimeout(()=>{
+            this.$refs.bottom.scrollIntoView(true)
+          },300)
         }
       }
     }

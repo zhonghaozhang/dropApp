@@ -87,6 +87,20 @@ const router = new Router({
         requireAuth:true,
       },
       component: r => require.ensure([], () => r(require('../view/updatePassword.vue')), 'updatePassword')
+    },{
+      path: '/lanshouDetails',
+      name: 'lanshouDetails',
+      meta:{
+        requireAuth:true,
+      },
+      component: r => require.ensure([], () => r(require('../view/lanshouDetails.vue')), 'lanshouDetails')
+    },{
+      path: '/jiedanDetails',
+      name: 'jiedanDetails',
+      meta:{
+        requireAuth:true,
+      },
+      component: r => require.ensure([], () => r(require('../view/jiedanDetails.vue')), 'jiedanDetails')
     },
     {
       path: '/scanPage',

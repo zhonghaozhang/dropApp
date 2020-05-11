@@ -1,7 +1,7 @@
 <template>
   <div id="app">
       <transition :name="transition">
-          <router-view class="view"></router-view>
+          <router-view class="view" ref="bottom"></router-view>
       </transition>
   </div>
 </template>
@@ -38,6 +38,9 @@ export default {
       }
       this.$router.isBack = false;
     }
+  },
+  mounted() {
+
   }
 
 }
