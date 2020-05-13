@@ -25,6 +25,9 @@
           <van-cell title="异常处理" @click="showSelect = true" size="large" is-link>
             <van-icon slot="icon" class="iconfont" class-prefix="icon" name="guanli_yichangchuli"></van-icon>
           </van-cell>
+          <van-cell title="打卡" @click="gotoPage('打卡')" size="large" is-link>
+            <van-icon slot="icon" class="iconfont" class-prefix="icon" name="daka"></van-icon>
+          </van-cell>
           <van-cell title="修改密码" @click="gotoPage('修改密码')" size="large" is-link>
             <van-icon slot="icon" class="iconfont"   class-prefix="icon" name="xiugaimima"></van-icon>
           </van-cell>
@@ -82,6 +85,8 @@
               this.$toast('敬请期待!')
             }else if(flag == '地址维护'){
               this.$toast('敬请期待!')
+            }else if(flag == '打卡'){
+              this.$router.push('daka')
             }
           },
           onSelect(item){

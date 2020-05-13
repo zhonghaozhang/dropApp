@@ -87,7 +87,16 @@ const router = new Router({
         requireAuth:true,
       },
       component: r => require.ensure([], () => r(require('../view/updatePassword.vue')), 'updatePassword')
-    },{
+    },
+    {
+      path: '/daka',
+      name: 'daka',
+      meta:{
+        requireAuth:true,
+      },
+      component: r => require.ensure([], () => r(require('../view/daka.vue')), 'daka')
+    },
+    {
       path: '/lanshouDetails',
       name: 'lanshouDetails',
       meta:{
