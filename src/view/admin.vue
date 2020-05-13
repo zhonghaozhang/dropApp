@@ -52,7 +52,7 @@
             showSelect:false,
             actions:[
               {name:'退回扫描',disabled:true},
-              {name:'修正',disabled:true},
+              {name:'再投',disabled:true},
             ]
           }
         },

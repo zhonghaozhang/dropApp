@@ -1,7 +1,7 @@
 <template>
   <div class="lanshouDetails">
     <van-nav-bar
-      title="1号待揽收详情"
+      :title="datas.serialNo+'号待揽收详情'"
       border
       left-arrow
       @click-left="onClickLeft"
@@ -11,62 +11,62 @@
       <van-row class="row-one">
         <van-col class="Text" span="24">
           <label class="Text" for="">详细地址: </label>
-          <span class="darkText">北京市海淀区建材城西路65号</span>
+          <span class="darkText">{{datas.originProv+datas.originCity+datas.originCounty+datas.originAddr}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">寄件人: </label>
-          <span class="darkText">张三</span>
+          <span class="darkText">{{datas.senderName}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单人员: </label>
-          <span class="darkText">某某</span>
+          <span class="darkText">{{datas.manualName ? datas.manualName :'某某'}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">联系电话: </label>
-          <span class="darkText">13200000000</span>
+          <span class="darkText">{{datas.senderPhone}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单时间: </label>
-          <span class="darkText">14:02:59</span>
+          <span class="darkText">{{datas.sendTime}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">是否逾期: </label>
-          <span class="darkText">否</span>
+          <span class="darkText">{{datas.isOverdue == 0 ? '否' : '是'}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单类型: </label>
-          <span class="darkText">系统</span>
+          <span class="darkText">{{datas.sendType == 2 ? '人工' : '系统'}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">接单时间: </label>
-          <span class="darkText">14:20:09</span>
+          <span class="darkText">{{datas.acceptTime}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单次数: </label>
-          <span class="darkText">1</span>
+          <span class="darkText">{{datas.sendTimes}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">预约揽收时间: </label>
-          <span class="darkText">15:30-16:50</span>
+          <span class="darkText">{{datas.preCollPeriod}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">催单次数: </label>
-          <span class="darkText">0</span>
+          <span class="darkText">{{datas.reminderTimes}}</span>
         </van-col>
       </van-row>
       <div class="buttons">
         <van-button @click="returns" class="button left-button" type="default">退单</van-button>
-        <van-button @click="" class="button right-button" type="default">完成揽收</van-button>
+        <van-button @click="finish" class="button right-button" type="default">完成揽收</van-button>
       </div>
     </div>
     <van-popup
@@ -99,10 +99,19 @@
             return {
               isShow:false,
               returnReason:'',
-              map:{}
+              map:{},
+              datas:{},
             }
         },
         mounted() {
+          this.$get('coll_dispatch_app/preCollectDetail',{
+            postman_id:this.$store.state.user.id,
+            orderId : this.$route.params.orderId,
+            detailId : this.$route.params.detailId,
+            serialNo : this.$route.params.serialNo,
+          }).then((res)=>{
+            this.datas = res
+          })
           setTimeout(()=>{
             this.initMap()
           },700)
@@ -120,10 +129,34 @@
               this.map.addOverlay(marker)
               this.map.setCenter(point)
             })
+            var point = new BMap.Point(this.datas.originAddrLng,this.datas.originAddrLat)
+            var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
+            var marker = new BMap.Marker(point, {icon: myIcon});  // 创建标注
+            this.map.addOverlay(marker)
+            this.map.setCenter(point)
           },
           returns(){
             this.returnReason = ''
             this.isShow = true
+          },
+          finish(){
+            this.$get('coll_dispatch_app/completeOrder',{
+              postman_id:this.$store.state.user.id,
+              orderId : this.$route.params.orderId,
+              detailId : this.$route.params.detailId,
+              // serialNo : this.$route.params.serialNo,
+            }).then((res)=>{
+              if(res.status == 1){
+                this.$toast.fail(res.message)
+              }else {
+                this.$toast.success(res.message)
+              }
+              setTimeout(()=>{
+                this.$router.goBack()
+              },1000)
+
+
+            })
           },
           returnSelect(flag){
             if(flag == 1){

@@ -1,7 +1,7 @@
 <template>
   <div class="jiedanDetails">
     <van-nav-bar
-      title="1号待接单详情"
+      :title="datas.serialNo+'号待接单详情'"
       border
       left-arrow
       @click-left="onClickLeft"
@@ -11,50 +11,58 @@
       <van-row class="row-one">
         <van-col class="Text" span="24">
           <label class="Text" for="">详细地址: </label>
-          <span class="darkText">北京市海淀区建材城西路65号</span>
+          <span class="darkText">{{datas.originProv+datas.originCity+datas.originCounty+datas.originAddr}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">寄件人: </label>
-          <span class="darkText">张三</span>
+          <span class="darkText">{{datas.senderName}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单时间: </label>
-          <span class="darkText">14:02:03</span>
+          <span class="darkText">{{datas.sendTime}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">联系电话: </label>
-          <span class="darkText">13200000000</span>
+          <span class="darkText">{{datas.senderPhone}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单类型: </label>
-          <span class="darkText">系统</span>
+          <span class="darkText">{{datas.sendType == 2 ? '人工' : '系统'}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">预约揽收时间: </label>
-          <span class="darkText">15:30-16:50</span>
+          <span class="darkText">{{datas.preCollPeriod}}</span>
         </van-col>
         <van-col  span="11">
           <label class="Text" for="">派单次数: </label>
-          <span class="darkText">1</span>
+          <span class="darkText">{{datas.sendTimes}}</span>
         </van-col>
       </van-row>
       <van-row class="row">
         <van-col  span="13">
           <label class="Text" for="">派单人: </label>
-          <span class="darkText">某某</span>
+          <span class="darkText">{{datas.manualName ? datas.manualName :'某某'}}</span>
         </van-col>
       </van-row>
       <div class="buttons">
         <van-button @click="returns" class="button left-button" type="default">拒绝</van-button>
-        <van-button @click="" class="button right-button" type="default">接收</van-button>
+        <van-button @click="finish" class="button right-button" type="default">接收</van-button>
       </div>
     </div>
+    <van-popup class="errModel" v-model="isShow2">
+      <h3>接单失败</h3>
+      <p>该揽收订单已经被其他投递员接单， 请选择其他订单！</p>
+      <div class="img">
+        <!--        <img :src="errMessage" alt="">-->
+      </div>
+      <van-button @click="enter"  class="enter" type="default">我知道了</van-button>
+    </van-popup>
     <van-popup
       class="popup"
       v-model="isShow"
@@ -84,11 +92,21 @@
     data() {
       return {
         isShow:false,
+        isShow2:false,
         returnReason:'',
-        map:{}
+        map:{},
+        datas:{},
       }
     },
     mounted() {
+      this.$get('coll_dispatch_app/preReceiveDetail',{
+        postman_id:this.$store.state.user.id,
+        orderId : this.$route.params.orderId,
+        detailId : this.$route.params.detailId,
+        serialNo : this.$route.params.serialNo,
+      }).then((res)=>{
+        this.datas = res
+      })
       setTimeout(()=>{
         this.initMap()
       },700)
@@ -106,10 +124,37 @@
           this.map.addOverlay(marker)
           this.map.setCenter(point)
         })
+        var point = new BMap.Point(this.datas.originAddrLng,this.datas.originAddrLat)
+        var myIcon = new BMap.Icon(userMessenger, new BMap.Size(40, 40), {imageSize: new BMap.Size(40, 40)});
+        var marker = new BMap.Marker(point, {icon: myIcon});  // 创建标注
+        this.map.addOverlay(marker)
+        this.map.setCenter(point)
       },
       returns(){
         this.returnReason = ''
         this.isShow = true
+      },
+      enter(){
+        this.isShow2 = false
+        this.$router.goBack()
+      },
+      finish(){
+        this.$get('/coll_dispatch_app/receiveOrder',{
+          postman_id:this.$store.state.user.id,
+          orderId : this.$route.params.orderId,
+          detailId : this.$route.params.detailId,
+          // serialNo : this.$route.params.serialNo,
+        }).then((res)=>{
+          if(res.status == 1){
+            this.$toast.fail(res.message)
+            this.isShow2 = true
+          }else {
+            this.$toast.success(res.message)
+            setTimeout(()=>{
+              this.$router.goBack()
+            },1000)
+          }
+        })
       },
       returnSelect(flag){
         if(flag == 1){
@@ -240,6 +285,50 @@
     }
     .submit-active{
       background: #0091FF;
+    }
+  }
+  .errModel{
+    width: 239px;
+    height: 299px;
+    text-align: center;
+    h3{
+      font-family: PingFangSC-Semibold;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      text-align: center;
+      margin-top: 15px;
+    }
+    p{
+      font-family: MicrosoftYaHei;
+      font-size: 12px;
+      color: #333333;
+      letter-spacing: 0;
+      text-align: center;
+      margin-top: 16px;
+      width: 192px;
+      margin-left: 23px;
+    }
+    .img{
+      width: 190px;
+      height: 114px;
+      margin-top: 10px;
+      display: inline-block;
+      background: url("../assets/img/err-message.png") no-repeat 0/100% 100%;
+      /*img{*/
+      /*  width: 100%;*/
+      /*  height: 100%;*/
+      /*}*/
+    }
+    .enter{
+      background: #0091FF;
+      border-radius: 15px;
+      width: 160px;
+      height: 30px;
+      line-height: 30px;
+      margin-top: 28px;
+      font-size: 12px;
+      color: #FFFFFF;
     }
   }
 </style>

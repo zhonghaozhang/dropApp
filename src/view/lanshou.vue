@@ -20,7 +20,7 @@
     <div class="content">
       <van-row class="title-tab">
         <van-col :class="activeName == '待揽收' ? 'active':''" @click="clickTab(1)" span="12">待揽收({{mailSum}})</van-col>
-        <van-col :class="activeName == '待接单' ? 'active':''" @click="clickTab(2)" span="12">待接单({{mailSum}})</van-col>
+        <van-col :class="activeName == '待接单' ? 'active':''" @click="clickTab(2)" span="12">待接单({{mailSum2}})</van-col>
       </van-row>
       <div class="subContent">
 <!--            <div v-for="(item,index) in collectionList" class="lists">-->
@@ -41,24 +41,24 @@
 <!--              <div class="bottom-line"></div>-->
 <!--            </div>-->
         <!--   待揽收     -->
-        <div v-if="activeName=='待揽收'" class="lists" v-for="(item,index) in 10">
+        <div v-if="activeName=='待揽收'" class="lists" v-for="(item,index) in collectionList">
           <van-row>
-            <van-col class="darkText" style="text-align: center" span="2">{{index+1}}</van-col>
-            <van-col class="darkText" span="17">订单编号:001</van-col>
-            <van-col class="text" span="5" @click="gotoPage(1)">查看详情 ></van-col>
+            <van-col class="darkText" style="text-align: center" span="2">{{item.serialNo}}</van-col>
+            <van-col class="darkText" span="17">订单编号:{{item.orderNumber}}</van-col>
+            <van-col class="text" span="5" @click="gotoPage(1,item)">查看详情 ></van-col>
           </van-row>
           <van-row>
             <van-col offset="2" span="17">
-              <div class="layout address">北京市海淀区建材城西路65号</div>
-              <div class="layout info">张三 13200000000</div>
-              <div class="layout info">预约揽收时间: <label>15:30-16:30</label></div>
-              <div class="layout info">系统派发 未逾期</div>
+              <div class="layout address">{{item.originProv+item.originCity+item.originCounty+item.originAddr}}</div>
+              <div class="layout info">{{item.senderName}} {{item.senderPhone}}</div>
+              <div class="layout info">预约揽收时间: <label>{{item.preCollPeriod}}</label></div>
+              <div class="layout info">{{item.sendType == 1?'系统派发':'人工派发'}} 未逾期</div>
             </van-col>
             <van-col class="right-action" span="5">
               <van-row>
                 <van-col span="4"><div class="line"></div></van-col>
                 <van-col span="6">
-                  <a :href="`tel:${item.senPhone}`"><i class="iconfont icon-tuotou_dianhua left-icon"></i></a>
+                  <a :href="`tel:${item.senderPhone}`"><i class="iconfont icon-tuotou_dianhua left-icon"></i></a>
                 </van-col>
                 <van-col offset="3" span="6"><i class="iconfont icon-tuotou_daohang right-icon" @click="openApp(item)"></i></van-col>
               </van-row>
@@ -66,18 +66,18 @@
           </van-row>
         </div>
         <!--        待接单-->
-        <div v-if="activeName=='待接单'" class="lists" v-for="(item,index) in 10">
+        <div v-if="activeName=='待接单'" class="lists" v-for="(item,index) in collectionList">
           <van-row>
-            <van-col class="darkText" style="text-align: center" span="2">{{index+1}}</van-col>
-            <van-col class="darkText" span="17">订单编号:001</van-col>
-            <van-col class="text" span="5" @click="gotoPage(2)">查看详情 ></van-col>
+            <van-col class="darkText" style="text-align: center" span="2">{{item.serialNo}}</van-col>
+            <van-col class="darkText" span="17">订单编号:{{item.orderNumber}}</van-col>
+            <van-col class="text" span="5" @click="gotoPage(2,item)">查看详情 ></van-col>
           </van-row>
           <van-row>
             <van-col offset="2" span="17">
-              <div class="layout address">北京市海淀区建材城西路65号</div>
-              <div class="layout info">张三 13200000000</div>
-              <div class="layout info">派单时间: <label>16:30:59 </label> 系统派发 </div>
-              <div class="layout info">预约揽收时间: <label>16:30-17:30</label></div>
+              <div class="layout address">{{item.originProv+item.originCity+item.originCounty+item.originAddr}}</div>
+              <div class="layout info">{{item.senderName}} {{item.senderPhone}}</div>
+              <div class="layout info">派单时间: <label> {{item.sendTime}} </label> {{item.sendType == 1?'系统派发':'人工派发'}} </div>
+              <div class="layout info">预约揽收时间: <label>{{item.preCollPeriod}}</label></div>
             </van-col>
             <van-col class="right-action" span="5">
               <van-row>
@@ -90,27 +90,7 @@
 
       </div>
     </div>
-    <van-popup
-      class="popup"
-      v-model="isShow"
-      closeable
-      position="bottom">
-      <div class="title">坐标详情</div>
-      <div class="address">北京市海淀区建材城西路65号</div>
-      <div class="text">距离: 2.1公里</div>
-      <div class="text">预计到达时间: 14:30</div>
-      <div class="text">预计耗时: 10分钟</div>
-    </van-popup>
-    <van-popup class="errModel" v-model="isShowErr">
-      <h3>接单失败</h3>
-      <p>该揽收订单已经被其他投递员接单， 请选择其他订单！</p>
-      <div class="img">
-<!--        <img :src="errMessage" alt="">-->
-      </div>
-      <van-button @click="enter"  class="enter" type="default">我知道了</van-button>
-    </van-popup>
   </div>
-
 </template>
 
 <script>
@@ -129,6 +109,7 @@
         YTNum:0,
         WTNum:0,
         mailSum:0,
+        mailSum2:0,
         collectionList:[],
       }
     },
@@ -140,24 +121,26 @@
     },
     methods:{
       getData(){
-        this.$get('collection/getCollectionNum',{
-          userId:this.$store.state.user.id,
-        }).then((res)=>{
-          console.log(res)
-          this.SumNum = res.ZL
-          this.WTNum = res.WL
-          this.YTNum = res.YL
-        })
-        this.$get('collection/getCollection',{
-          userId:this.$store.state.user.id,
+        let api = 'coll_dispatch_app/preCollectList'
+        if(this.activeName == '待揽收'){
+          api = 'coll_dispatch_app/preCollectList'
+        }else{
+          api = 'coll_dispatch_app/preReceiveList'
+        }
+        this.$get(api,{
+          postman_id:this.$store.state.user.id,
           // deptCode:this.$store.state.user.deptCode,
         }).then((res)=>{
           console.log(res)
-          this.$toast(res.message)
-          this.mailSum = res.mailSum
-          this.collectionList = res.collectionList
+          // this.$toast(res.message)
+          this.SumNum = res.totalAmount
+          this.YTNum = res.completedAmount
+          this.WTNum = res.toCollectAmount
+          this.mailSum = res.toCollectAmount
+          this.mailSum2 = res.toReciveAmount
+          this.collectionList = res.results
           this.collectionList.map((item,index)=>{
-            var point = new BMap.Point(item.longitude,item.latitude);
+            var point = new BMap.Point(item.originAddrLng,item.originAddrLat);
             var opts = {
               position : point,    // 指定文本标注所在的地理位置
               offset   : new BMap.Size(0, 0)    //设置文本偏移量
@@ -218,17 +201,32 @@
         } else {
           this.activeName = '待接单'
         }
+        this.getData()
       },
-      gotoPage(flag){
+      gotoPage(flag,item){
         if(flag == 1){
-          this.$router.push('/lanshouDetails')
+          this.$router.push({
+            name:'lanshouDetails',
+            params:{
+              orderId : item.orderId,
+              detailId : item.detailId,
+              serialNo : item.serialNo,
+            }
+          })
         }else {
-          this.$router.push('/jiedanDetails')
+          this.$router.push({
+            name:'jiedanDetails',
+            params:{
+              orderId : item.orderId,
+              detailId : item.detailId,
+              serialNo : item.serialNo,
+            }
+          })
         }
       },
       enter(){
         this.isShowErr = false
-      }
+      },
     }
 
   }
@@ -436,48 +434,5 @@
       text-align: left;
     }
   }
-  .errModel{
-    width: 239px;
-    height: 299px;
-    text-align: center;
-    h3{
-      font-family: PingFangSC-Semibold;
-      font-size: 14px;
-      color: #333333;
-      letter-spacing: 0;
-      text-align: center;
-      margin-top: 15px;
-    }
-    p{
-      font-family: MicrosoftYaHei;
-      font-size: 12px;
-      color: #333333;
-      letter-spacing: 0;
-      text-align: center;
-      margin-top: 16px;
-      width: 192px;
-      margin-left: 23px;
-    }
-    .img{
-      width: 190px;
-      height: 114px;
-      margin-top: 10px;
-      display: inline-block;
-      background: url("../assets/img/err-message.png") no-repeat 0/100% 100%;
-      /*img{*/
-      /*  width: 100%;*/
-      /*  height: 100%;*/
-      /*}*/
-    }
-    .enter{
-      background: #0091FF;
-      border-radius: 15px;
-      width: 160px;
-      height: 30px;
-      line-height: 30px;
-      margin-top: 28px;
-      font-size: 12px;
-      color: #FFFFFF;
-    }
-  }
+
 </style>
